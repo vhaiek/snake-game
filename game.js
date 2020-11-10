@@ -132,11 +132,6 @@ function init() {
     food = new Rectangle(80, 80, 10, 10);
     bonus = new Rectangle(80, 80, 10, 10);
 
-    // Create walls
-    //wall.push(new Rectangle(50, 50, 10, 10));
-    //wall.push(new Rectangle(50, 100, 10, 10));
-    //wall.push(new Rectangle(100, 50, 10, 10));
-    //wall.push(new Rectangle(100, 100, 10, 10));
 
     // Load saved highscores
     if (localStorage.highscores) {
@@ -193,12 +188,6 @@ gameScene.paint = function (ctx) {
     for (i = 0, l = body.length; i < l; i += 1) {
         body[i].drawImage(ctx, iBody);
     }
-    
-    // Draw walls
-    //ctx.fillStyle = '#999';
-    //for (i = 0, l = wall.length; i < l; i += 1) {
-    // wall[i].fill(ctx);
-    //}
     
     // Draw food
     ctx.strokeStyle = '#3FFF00';
@@ -288,24 +277,22 @@ gameScene.act = function () {
             aEat.play();
         }
         //Bonus intersects
-          if (body[0].intersects(bonus)) {
+        if (body[0].intersects(bonus)) {
             score += 5;
             bonus.x = random(canvas.width / 10 - 1) * 10;
             bonus.y = random(canvas.height / 10 - 1) * 10;
             aBonus.play();
-            sendScore()
+            bonusScore();
+                
+            function bonusScore (    
+                fetch("www.jsonplaceholder.com?score=100")
+                .then (fuction (response)){
+                return response.json ();    
+                }
+                .catch (function (error)) {
+                return console.log ("error loading page/n");
+            )
         }
-        /* Wall Intersects
-           for (i = 0, l = wall.length; i < l; i += 1) {
-                if (food.intersects(wall[i])) {
-                food.x = random(canvas.width / 10 - 1) * 10;
-                food.y = random(canvas.height / 10 - 1) * 10;
-                }
-                if (body[0].intersects(wall[i])) {
-                gameover = true;
-                pause = true;
-                }
-            }*/
 
         // Body Intersects
         for (i = 2, l = body.length; i < l; i += 1) {
