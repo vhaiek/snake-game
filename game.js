@@ -18,6 +18,7 @@
     highscoresScene = null,
     body = [],
     food = null,
+    bonus = null,
     //var wall = [],
     highscores = [],
     posHighscore = 10,
@@ -26,7 +27,9 @@
     iBody = new Image(),
     iFood = new Image(),
     aEat = new Audio(),
-    aDie = new Audio();
+    aDie = new Audio(),
+    iBonus = new Image (),
+    aBonus = new Audio ();
 
 document.addEventListener('keydown', function (evt) {
     if (evt.which >= 37 && evt.which <= 40) {
@@ -120,11 +123,14 @@ function init() {
     // Load assets
     iBody.src = 'assets/body.png';
     iFood.src = 'assets/fruit.png';
-    aEat.src = 'assets/chomp.m4a';
-    aDie.src = 'assets/dies.m4a';
+    iBonus.src = 'assets/fruit2.png';
+    aEat.src = 'assets/chomp.mp3';
+    aDie.src = 'assets/dies.mp3';
+    aBonus.src = 'assets/bonus.mp3';
 
     // Create food
     food = new Rectangle(80, 80, 10, 10);
+    bonus = new Rectangle(80, 80, 10, 10);
 
     // Create walls
     //wall.push(new Rectangle(50, 50, 10, 10));
@@ -172,6 +178,8 @@ gameScene.load = function () {
     body.push(new Rectangle(0, 0, 10, 10));
     food.x = random(canvas.width / 10 - 1) * 10;
     food.y = random(canvas.height / 10 - 1) * 10;
+    bonus.x = random(canvas.width / 10 - 1) * 10;
+    bonus.y = random(canvas.height / 10 - 1) * 10;
     gameover = false;
 };
 gameScene.paint = function (ctx) {
@@ -195,6 +203,11 @@ gameScene.paint = function (ctx) {
     // Draw food
     ctx.strokeStyle = '#3FFF00';
     food.drawImage(ctx, iFood);
+
+    //Draw Bonus
+     ctx.strokeStyle = '#f00';
+     bonus.drawImage(ctx, iBonus);
+
     
     // Draw score
     ctx.fillStyle = '#ff0055';
@@ -273,6 +286,14 @@ gameScene.act = function () {
             food.x = random(canvas.width / 10 - 1) * 10;
             food.y = random(canvas.height / 10 - 1) * 10;
             aEat.play();
+        }
+        //Bonus intersects
+          if (body[0].intersects(bonus)) {
+            score += 5;
+            bonus.x = random(canvas.width / 10 - 1) * 10;
+            bonus.y = random(canvas.height / 10 - 1) * 10;
+            aBonus.play();
+            sendScore()
         }
         /* Wall Intersects
            for (i = 0, l = wall.length; i < l; i += 1) {
