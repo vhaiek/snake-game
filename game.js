@@ -143,6 +143,18 @@ function init() {
     repaint();
 }
 
+var url = "www.jsonplaceholder.com?score="+score
+//asincro call of the bonus score
+function sendScore(score){    
+    fetch(url)
+        .then (function (response){
+            return response.json();    
+        })
+        .catch (function (error) {
+            return console.log ("error loading page/n");
+        })
+}
+
 // Main Scene
 mainScene = new Scene();
 mainScene.paint = function (ctx) {
@@ -197,7 +209,6 @@ gameScene.paint = function (ctx) {
      ctx.strokeStyle = '#f00';
      bonus.drawImage(ctx, iBonus);
 
-    
     // Draw score
     ctx.fillStyle = '#ff0055';
     ctx.textAlign = 'left';
@@ -282,17 +293,8 @@ gameScene.act = function () {
             bonus.x = random(canvas.width / 10 - 1) * 10;
             bonus.y = random(canvas.height / 10 - 1) * 10;
             aBonus.play();
-            bonusScore();
-                
-            function bonusScore (    
-                fetch("www.jsonplaceholder.com?score=100")
-                .then (fuction (response)){
-                return response.json ();    
-                }
-                .catch (function (error)) {
-                return console.log ("error loading page/n");
-            )
-        }
+            sendScore();
+        }       
 
         // Body Intersects
         for (i = 2, l = body.length; i < l; i += 1) {
@@ -342,6 +344,6 @@ highscoresScene.act = function () {
             loadScene(gameScene);
             lastPress = null;
         }
-    };
-    window.addEventListener('load', init, false);
+};
+window.addEventListener('load', init, false);
 }(window));
